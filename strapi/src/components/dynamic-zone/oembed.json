@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_dynamic_zone_oembeds",
+  "info": {
+    "displayName": "oEmbed",
+    "icon": "play",
+    "description": "Embed rich media content from YouTube, Vimeo, Twitter, Instagram, and other providers"
+  },
+  "options": {},
+  "attributes": {
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "caption": {
+      "type": "string"
+    },
+    "alignment": {
+      "type": "enumeration",
+      "default": "center",
+      "enum": [
+        "left",
+        "center",
+        "right",
+        "full-width"
+      ]
+    }
+  }
+}

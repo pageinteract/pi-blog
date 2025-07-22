@@ -16,7 +16,6 @@ export async function BlogLayout({
   locale: string;
   children: React.ReactNode;
 }) {
-
   return (
     <Container className="mt-16 lg:mt-32">
       <div className="flex justify-between items-center px-2 py-8">
@@ -58,9 +57,7 @@ export async function BlogLayout({
                 {article.title}
               </h1>
             </header>
-            <div className="mt-8 prose prose-sm prose-invert">
-              {children}
-            </div>
+            <div className="mt-8 prose prose-sm prose-invert">{children}</div>
             <div className="flex space-x-2 items-center pt-12 border-t border-neutral-800 mt-12">
               <div className="flex space-x-2 items-center ">
                 {/* <Image
@@ -87,7 +84,12 @@ export async function BlogLayout({
           </article>
         </div>
       </div>
-      {article?.dynamic_zone && (<DynamicZoneManager dynamicZone={article?.dynamic_zone} locale={locale} />)}
+      {article?.dynamic_zone && (
+        <DynamicZoneManager
+          dynamicZone={article?.dynamic_zone}
+          locale={locale}
+        />
+      )}
     </Container>
   );
 }

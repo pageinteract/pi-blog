@@ -7,6 +7,26 @@ export interface Image {
   alternativeText: string;
 }
 
+export interface OEmbedData {
+  url: string;
+  thumbnail?: string;
+  oembed: {
+    title?: string;
+    author_name?: string;
+    author_url?: string;
+    type: "video" | "photo" | "rich" | "link";
+    height?: number;
+    width?: number;
+    version?: string;
+    provider_name?: string;
+    provider_url?: string;
+    thumbnail_height?: number;
+    thumbnail_width?: number;
+    thumbnail_url?: string;
+    html?: string;
+  };
+}
+
 export interface Article {
   title: string;
   description: string;
@@ -18,7 +38,8 @@ export interface Article {
   publishedAt: string;
   locale: string;
   image: Image;
-  categories: Category[]
+  categories: Category[];
+  oembed?: OEmbedData;
 }
 
 export interface Product {
@@ -32,4 +53,4 @@ export interface Product {
   featured?: boolean;
   images: any[];
   categories?: any[];
-};
+}

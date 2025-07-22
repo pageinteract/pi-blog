@@ -22,3 +22,44 @@ body {
     text-wrap: balance;
   }
 }
+
+/* oEmbed styles for responsive embeds */
+@layer components {
+  .oembed-container {
+    @apply w-full max-w-full;
+  }
+
+  .oembed-container iframe {
+    @apply w-full h-full border-0 rounded-lg;
+  }
+
+  .oembed-container video {
+    @apply w-full h-auto rounded-lg;
+  }
+
+  /* Ensure Twitter embeds are properly styled */
+  .oembed-container .twitter-tweet {
+    @apply mx-auto;
+  }
+
+  /* Responsive embed containers */
+  .oembed-container .relative {
+    position: relative;
+  }
+
+  .oembed-container .relative::before {
+    content: '';
+    display: block;
+    width: 100%;
+  }
+
+  .oembed-container iframe,
+  .oembed-container object,
+  .oembed-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

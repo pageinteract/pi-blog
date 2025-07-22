@@ -183,6 +183,23 @@ export interface DynamicZoneLaunches extends Struct.ComponentSchema {
   };
 }
 
+export interface DynamicZoneOembed extends Struct.ComponentSchema {
+  collectionName: 'components_dynamic_zone_oembeds';
+  info: {
+    description: 'Embed rich media content from YouTube, Vimeo, Twitter, Instagram, and other providers';
+    displayName: 'oEmbed';
+    icon: 'play';
+  };
+  attributes: {
+    alignment: Schema.Attribute.Enumeration<
+      ['left', 'center', 'right', 'full-width']
+    > &
+      Schema.Attribute.DefaultTo<'center'>;
+    caption: Schema.Attribute.String;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface DynamicZonePricing extends Struct.ComponentSchema {
   collectionName: 'components_dynamic_zone_pricings';
   info: {
@@ -520,6 +537,7 @@ declare module '@strapi/strapi' {
       'dynamic-zone.hero': DynamicZoneHero;
       'dynamic-zone.how-it-works': DynamicZoneHowItWorks;
       'dynamic-zone.launches': DynamicZoneLaunches;
+      'dynamic-zone.oembed': DynamicZoneOembed;
       'dynamic-zone.pricing': DynamicZonePricing;
       'dynamic-zone.related-articles': DynamicZoneRelatedArticles;
       'dynamic-zone.related-products': DynamicZoneRelatedProducts;

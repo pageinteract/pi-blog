@@ -428,6 +428,13 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::article.article'
     >;
+    oembed: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<'plugin::oembed.oembed'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
@@ -487,6 +494,7 @@ export interface ApiBlogPageBlogPage extends Struct.SingleTypeSchema {
         'dynamic-zone.faq',
         'dynamic-zone.cta',
         'dynamic-zone.brands',
+        'dynamic-zone.oembed',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -702,6 +710,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'dynamic-zone.cta',
         'dynamic-zone.form-next-to-section',
         'dynamic-zone.faq',
+        'dynamic-zone.oembed',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
