@@ -1,0 +1,27 @@
+---
+alwaysApply: true
+---
+# Cursor Project Rules – Main
+
+## Project Context
+- This repository is a full-stack blog platform based on the official Strapi LaunchPad template, using **Strapi (CMS/back-end)** and **Next.js (front-end)**.
+- All major AI/code suggestions must prioritize clean separation between front-end and CMS logic.
+- The project is to be progressively enhanced for the main blog at https://pageinteract.com/blog, prioritizing performance, SEO, accessibility, and best practices.
+
+## Routing & Language
+- **Default homepage is `/`** (not `/en` or any other locale-based path).
+- There should be **no locale division or locale-based redirection**—disable or remove all i18n routing unless explicitly working on multi-language support.
+
+## UI/UX
+- UI components and design patterns must be based on **https://ui.shadcn.com/** (ShadCN UI).
+- Favor clean, modern, highly accessible, and responsive patterns.
+- Ensure global styles and primitives are consistent throughout the project.
+
+## Modularity & Type Safety
+- Use strict TypeScript for all new code (front-end and back-end typings).
+- All feature logic should be modularized for maintainability.
+- Strive for clear, self-documenting code and concise inline comments where non-obvious.
+
+## Integration
+- Next.js must consume data exclusively via Strapi APIs (REST or GraphQL).
+- All API endpoints and fetch logic must handle server and client-side rendering securely.

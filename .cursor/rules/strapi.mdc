@@ -1,0 +1,31 @@
+---
+globs: strapi/**/*
+alwaysApply: false
+---
+# Cursor Rules – Strapi Backend
+
+## Internationalization
+- **Disable all locale support and middleware** (`i18n`) unless a task requires i18n for future expansion.
+- All API endpoints and content-types default to a single language.
+
+## Content Models
+- Use Strapi's Content-Types for Articles, Pages, and Global config.
+- All content models should have strong type definitions, clear validation, and concise relationships.
+- Optimize collections for blog content—fields must support markdown or rich text.
+
+## API & Permissions
+- Expose **read-only** API endpoints for blog, unless securely authenticated write access is required.
+- Sanitize all responses and enable only necessary permissions in public roles.
+- REST API should be preferred unless explicit need for GraphQL.
+
+## SEO & Metadata
+- All content-types should include SEO metadata fields (e.g., title, description, Open Graph fields).
+- Ensure Strapi’s SEO plugin (or custom fields) are populated and consistent.
+
+## Media Handling
+- Serve media assets using Strapi's built-in Media Library. Optimize images for web (use plugins for optimization if needed).
+- Set max size policies and automate clean-up of unused assets.
+
+## Extensibility
+- All plugin or middleware customization must be clearly documented in code and in this rules file.
+- Favor upgrades and compatibility with latest Strapi versions (v5.x+).

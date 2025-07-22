@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 import { AmbientColor } from "@/components/decorations/ambient-color";
 import { Container } from "@/components/container";
@@ -9,54 +9,44 @@ import { ProductItems } from "@/components/products/product-items";
 import { Subheading } from "@/components/elements/subheading";
 import { IconShoppingCartUp } from "@tabler/icons-react";
 import fetchContentType from "@/lib/strapi/fetchContentType";
-import { generateMetadataObject } from '@/lib/shared/metadata';
+import { generateMetadataObject } from "@/lib/shared/metadata";
 
-import ClientSlugHandler from '../ClientSlugHandler';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-
-  const pageData = await fetchContentType("product-page", {
-    filters: {
-      locale: params.locale,
+export async function generateMetadata(): Promise<Metadata> {
+  const pageData = await fetchContentType(
+    "product-page",
+    {
+      filters: {
+        locale: "en", // Hardcoded to English
+      },
+      populate: "seo.metaImage",
     },
-    populate: "seo.metaImage",
-  }, true)
+    true
+  );
 
   const seo = pageData?.seo;
   const metadata = generateMetadataObject(seo);
   return metadata;
 }
 
-export default async function Products({
-  params,
-}: {
-  params: { locale: string };
-}) {
-
+export default async function Products() {
   // Fetch the product-page and products data
-  const productPage = await fetchContentType('product-page', {
-    filters: {
-      locale: params.locale,
+  const productPage = await fetchContentType(
+    "product-page",
+    {
+      filters: {
+        locale: "en", // Hardcoded to English
+      },
     },
-  }, true);
-  const products = await fetchContentType('products');
-
-  const localizedSlugs = productPage.localizations?.reduce(
-    (acc: Record<string, string>, localization: any) => {
-      acc[localization.locale] = "products";
-      return acc;
-    },
-    { [params.locale]: "products" }
+    true
   );
-  const featured = products?.data.filter((product: { featured: boolean }) => product.featured);
+  const products = await fetchContentType("products");
+
+  const featured = products?.data.filter(
+    (product: { featured: boolean }) => product.featured
+  );
 
   return (
     <div className="relative overflow-hidden w-full">
-      <ClientSlugHandler localizedSlugs={localizedSlugs} />
       <AmbientColor />
       <Container className="pt-40 pb-40">
         <FeatureIconContainer className="flex justify-center items-center overflow-hidden">
@@ -68,8 +58,8 @@ export default async function Products({
         <Subheading className="max-w-3xl mx-auto">
           {productPage.sub_heading}
         </Subheading>
-        <Featured products={featured} locale={params.locale} />
-        <ProductItems products={products?.data} locale={params.locale} />
+        <Featured products={featured} locale="en" />
+        <ProductItems products={products?.data} locale="en" />
       </Container>
     </div>
   );

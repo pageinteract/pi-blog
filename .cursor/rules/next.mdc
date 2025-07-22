@@ -1,0 +1,33 @@
+---
+globs: next/**/*
+alwaysApply: false
+---
+# Cursor Rules – Next.js Front-end
+
+## Routing
+- Homepage **must be `/`**, not `/en` or locale-based. Disable/remove `i18n` from `next.config.js`.
+- `/blog` should list blog posts; `/blog/[slug]` should display individual articles.
+- Implement canonical URLs for SEO, ensuring `/blog` and `/blog/[slug]` resolve properly.
+- No locale or language-prefixed URLs.
+
+## ShadCN UI Integration
+- All components and layouts should use **shadcn/ui** primitives.
+- Prefer composable, themeable, and accessible patterns—favor server components where possible.
+- Customize ShadCN themes and tokens to match pageinteract.com branding.
+- Ensure dark/light mode support and mobile responsiveness.
+- Avoid using third-party UI libraries unless ShadCN cannot support the need.
+
+## Data Fetching
+- Use **TypeScript** with full types for Strapi data structures.
+- Favor SSG/ISR (Static Site Generation/Incremental Static Regeneration) for blog routes.
+- Sanitize and validate all external data.
+
+## Structure & Quality
+- Co-locate components, hooks, and tests with feature logic (e.g., `/components`, `/hooks`, `/lib`).
+- Use modern Next.js app directory features if project supports.
+- Test UI/UX in Chrome and Firefox for A11y.
+- All navigation, CTAs, and forms should be keyboard accessible.
+
+## Performance & SEO
+- Apply lazy load, code splitting, and optimized images.
+- Use Next.js SEO helpers and ensure meta tags/parsing for blog posts is robust.
