@@ -8,8 +8,10 @@ registry:
   password: KAMAL_REGISTRY_PASSWORD
 
 servers:
-  web:
+  strapi:
     - 65.109.162.158
+
+primary_role: strapi
 
 proxy:
   ssl: true
