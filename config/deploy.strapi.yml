@@ -5,8 +5,7 @@ image: ghcr.io/pageinteract/pi-blog-strapi
 registry:
   server: ghcr.io
   username: sulmanweb
-  password:
-    - KAMAL_REGISTRY_PASSWORD
+  password: KAMAL_REGISTRY_PASSWORD
 
 servers:
   web:
