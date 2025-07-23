@@ -17,9 +17,9 @@ Welcome to LaunchPad, a cutting-edge full-stack blog platform built with **Next.
 ## 🏗️ Architecture
 
 - **Frontend**: Next.js 14 with TypeScript, ShadCN UI, Tailwind CSS
-- **Backend**: Strapi 5.x CMS with PostgreSQL
+- **Backend**: Strapi 5.x CMS with SQLite
 - **Deployment**: Docker containers orchestrated with Kamal
-- **Infrastructure**: Automated backups, SSL, and monitoring
+- **Infrastructure**: SQLite data persistence, SSL, and monitoring
 
 ## 🚀 Getting Started
 

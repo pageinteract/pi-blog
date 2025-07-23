@@ -54,15 +54,9 @@ services:
         NODE_ENV: production
         HOST: "0.0.0.0"
         PORT: 1337
-        DATABASE_CLIENT: postgres
-        DATABASE_HOST: pi-blog-staging-postgres
-        DATABASE_PORT: 5432
-        DATABASE_NAME: pi_blog_stg
-        DATABASE_USERNAME: postgres
-        DATABASE_SCHEMA: public
-        DATABASE_SSL: false
+        DATABASE_CLIENT: sqlite
+        DATABASE_FILENAME: /opt/app/data/data.db
       secret:
-        - DATABASE_PASSWORD
         - ADMIN_JWT_SECRET
         - API_TOKEN_SALT
         - TRANSFER_TOKEN_SALT
@@ -73,37 +67,7 @@ services:
         - RESEND_API_KEY
     volumes:
       - pi_blog_uploads:/opt/app/public/uploads
-
-accessories:
-  postgres:
-    image: postgres:17-alpine
-    host: 65.109.162.158
-    port: 5432
-    cmd: postgres -c max_connections=50
-    env:
-      clear:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: pi_blog_stg
-        POSTGRES_INITDB_ARGS: ""
-      secret:
-        - DATABASE_PASSWORD
-    volumes:
-      - /var/lib/postgresql/pi_blog_staging:/var/lib/postgresql/data
-
-  postgres_backup:
-    image: kartoza/pg-backup:17-3.5
-    host: 65.109.162.158
-    env:
-      clear:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: pi_blog_stg
-        POSTGRES_HOST: pi-blog-staging-postgres
-        POSTGRES_PORT: 5432
-        CRON_SCHEDULE: "0 2 * * 0" # Weekly backups on Sunday at 2am
-      secret:
-        - DATABASE_PASSWORD
-    directories:
-      - backups:/backups
+      - pi_blog_data:/opt/app/data
 
 aliases:
   console: app exec --interactive --reuse "bash"

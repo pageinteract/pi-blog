@@ -49,9 +49,6 @@ pi-blog/
    # Kamal Registry Password (GitHub Container Registry Token)
    KAMAL_REGISTRY_PASSWORD=ghp_your_github_token_here
 
-   # Database Password
-   DATABASE_PASSWORD=your_secure_database_password
-
    # Strapi Configuration
    ADMIN_JWT_SECRET=$(openssl rand -base64 32)
    API_TOKEN_SALT=$(openssl rand -base64 32)
@@ -122,16 +119,12 @@ After the initial deployment, migrate your existing Strapi data:
 - **Port**: 1337
 - **Host**: `stg-strapi.pageinteract.com`
 - **Image**: `ghcr.io/pageinteract/pi-blog-strapi-staging`
-- **Database**: PostgreSQL
+- **Database**: SQLite (file-based)
 - **Features**:
   - Content management
   - API endpoints
   - Media uploads
-
-### PostgreSQL Database
-- **Image**: `postgres:17-alpine`
-- **Port**: 5432
-- **Backups**: Automated weekly backups (staging) / daily (production)
+  - Persistent data storage via Docker volumes
 
 ## Useful Commands
 
@@ -158,8 +151,8 @@ kamal nextjs logs -f -d staging
 # View Strapi logs
 kamal strapi logs -f -d staging
 
-# View database logs
-kamal postgres logs -f -d staging
+# View Strapi database status
+kamal strapi exec -d staging "ls -la /opt/app/data/"
 ```
 
 ### Container Management
@@ -179,11 +172,14 @@ kamal stop -d staging
 
 ### Database Management
 ```bash
-# Access database console
-kamal postgres exec -d staging --interactive "psql -U postgres -d pi_blog_stg"
+# Access Strapi console for database operations
+kamal strapi exec -d staging --interactive "yarn strapi console"
 
-# Create database backup
-kamal postgres_backup exec -d staging "pg_dump"
+# Create database backup (copy SQLite file)
+kamal strapi exec -d staging "cp /opt/app/data/data.db /opt/app/data/backup-$(date +%Y%m%d-%H%M%S).db"
+
+# List database backups
+kamal strapi exec -d staging "ls -la /opt/app/data/backup-*.db"
 ```
 
 ## Troubleshooting
@@ -195,10 +191,10 @@ kamal postgres_backup exec -d staging "pg_dump"
    - Verify environment variables are set correctly
    - Ensure all dependencies are properly installed
 
-2. **Database Connection Issues**:
-   - Verify PostgreSQL container is running
-   - Check database credentials in environment
-   - Ensure network connectivity between services
+2. **Database Issues**:
+   - Verify SQLite file permissions in /opt/app/data/
+   - Check that data volume is properly mounted
+   - Ensure sufficient disk space for database growth
 
 3. **SSL/Domain Issues**:
    - Verify DNS records point to your server
@@ -213,14 +209,14 @@ kamal postgres_backup exec -d staging "pg_dump"
 
 - **Application Logs**: Available via `kamal logs` commands
 - **System Logs**: `/var/log/` on the server
-- **Database Backups**: `/backups/` directory (mounted volume)
+- **Database Backups**: `/opt/app/data/` directory (SQLite files)
 
 ## Security Considerations
 
 1. **Environment Variables**: Never commit `.env` files to version control
-2. **Database Access**: Restrict database access to application containers only
+2. **Database Security**: SQLite file is contained within the application container
 3. **SSL/TLS**: Always use HTTPS in production
-4. **Backups**: Regular automated backups with retention policies
+4. **Backups**: Regular SQLite database file backups via volume snapshots
 5. **Updates**: Keep base images and dependencies updated
 
 ## SEO Features
@@ -239,9 +235,9 @@ kamal postgres_backup exec -d staging "pg_dump"
 
 1. **Health Checks**: Kamal automatically monitors container health
 2. **Log Rotation**: Configure log rotation to prevent disk space issues
-3. **Database Maintenance**: Regular VACUUM and ANALYZE operations
+3. **Database Maintenance**: Regular SQLite VACUUM operations for optimization
 4. **Security Updates**: Keep base images and dependencies updated
-5. **Backup Verification**: Regularly test backup restoration procedures
+5. **Backup Verification**: Regularly test SQLite backup restoration procedures
 
 ## Support
 

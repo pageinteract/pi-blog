@@ -2,7 +2,7 @@
 
 set -e
 
-echo "📦 Migrating Strapi data from SQLite to PostgreSQL"
+echo "📦 Migrating Strapi data to SQLite database"
 
 # Check if the export file exists
 EXPORT_FILE="strapi/data/export_20250116105447.tar.gz"
@@ -14,15 +14,6 @@ fi
 
 echo "✅ Found export file: $EXPORT_FILE"
 
-# Extract the export file to a temporary directory
-TEMP_DIR=$(mktemp -d)
-echo "📂 Extracting to temporary directory: $TEMP_DIR"
-
-cd strapi
-tar -xzf "data/export_20250116105447.tar.gz" -C "$TEMP_DIR"
-
-echo "✅ Export file extracted"
-
 # Check if Strapi container is running
 if ! kamal strapi logs -d staging &> /dev/null; then
     echo "❌ Strapi container is not running. Please deploy first:"
@@ -30,17 +21,23 @@ if ! kamal strapi logs -d staging &> /dev/null; then
     exit 1
 fi
 
-echo "📥 Importing data to PostgreSQL database..."
+echo "📥 Copying export file to Strapi container..."
+
+# Copy the export file to the container
+kamal strapi exec -d staging "mkdir -p /tmp"
+cat "$EXPORT_FILE" | kamal strapi exec -d staging --interactive "cat > /tmp/import.tar.gz"
+
+echo "📥 Importing data to SQLite database..."
 
 # Import the data using Strapi's import command
 kamal strapi exec -d staging --interactive "yarn strapi import -f /tmp/import.tar.gz"
 
 echo "🧹 Cleaning up temporary files..."
-rm -rf "$TEMP_DIR"
+kamal strapi exec -d staging "rm -f /tmp/import.tar.gz"
 
 echo "✅ Data migration complete!"
 echo ""
-echo "🎉 Your Strapi data has been successfully migrated to PostgreSQL!"
+echo "🎉 Your Strapi data has been successfully migrated to SQLite!"
 echo ""
 echo "Next steps:"
 echo "1. Check Strapi admin: https://stg-strapi.pageinteract.com/admin"

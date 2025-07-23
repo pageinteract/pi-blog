@@ -32,6 +32,9 @@ WORKDIR /opt/app
 
 COPY --from=builder --chown=strapi:strapi /opt/app ./
 
+# Create data directory for SQLite database
+RUN mkdir -p /opt/app/data && chown -R strapi:strapi /opt/app/data
+
 USER strapi
 
 EXPOSE 1337
