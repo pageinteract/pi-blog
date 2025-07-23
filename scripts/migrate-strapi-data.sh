@@ -15,25 +15,25 @@ fi
 echo "✅ Found export file: $EXPORT_FILE"
 
 # Check if Strapi container is running
-if ! kamal strapi logs -d staging &> /dev/null; then
+if ! kamal app logs -c config/deploy.strapi.staging.yml &> /dev/null; then
     echo "❌ Strapi container is not running. Please deploy first:"
-    echo "kamal deploy -d staging"
+    echo "kamal deploy -c config/deploy.strapi.staging.yml"
     exit 1
 fi
 
 echo "📥 Copying export file to Strapi container..."
 
 # Copy the export file to the container
-kamal strapi exec -d staging "mkdir -p /tmp"
-cat "$EXPORT_FILE" | kamal strapi exec -d staging --interactive "cat > /tmp/import.tar.gz"
+kamal app exec -c config/deploy.strapi.staging.yml "mkdir -p /tmp"
+cat "$EXPORT_FILE" | kamal app exec -c config/deploy.strapi.staging.yml --interactive "cat > /tmp/import.tar.gz"
 
 echo "📥 Importing data to SQLite database..."
 
 # Import the data using Strapi's import command
-kamal strapi exec -d staging --interactive "yarn strapi import -f /tmp/import.tar.gz"
+kamal app exec -c config/deploy.strapi.staging.yml --interactive "yarn strapi import -f /tmp/import.tar.gz"
 
 echo "🧹 Cleaning up temporary files..."
-kamal strapi exec -d staging "rm -f /tmp/import.tar.gz"
+kamal app exec -c config/deploy.strapi.staging.yml "rm -f /tmp/import.tar.gz"
 
 echo "✅ Data migration complete!"
 echo ""

@@ -23,11 +23,14 @@ source .env
 
 echo "✅ Environment variables loaded"
 
-# Setup staging deployment
+# Setup staging deployment for both services
 echo "🏗️  Setting up staging deployment..."
 
-# Initialize kamal for staging
-kamal setup -d staging
+echo "📦 Setting up Next.js service..."
+kamal setup -c config/deploy.staging.yml
+
+echo "📦 Setting up Strapi service..."
+kamal setup -c config/deploy.strapi.staging.yml
 
 echo "✅ Staging deployment setup complete!"
 
@@ -36,11 +39,14 @@ echo "🎉 Deployment setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Update your .env file with actual values"
-echo "2. Deploy to staging: kamal deploy -d staging"
+echo "2. Deploy to staging:"
+echo "   - Next.js: kamal deploy -c config/deploy.staging.yml"
+echo "   - Strapi: kamal deploy -c config/deploy.strapi.staging.yml"
 echo "3. Migrate existing data: ./scripts/migrate-strapi-data.sh"
 echo ""
 echo "Useful commands:"
-echo "- Deploy staging: kamal deploy -d staging"
-echo "- Check logs: kamal logs -f -d staging"
-echo "- Console access: kamal console -d staging"
-echo "- Strapi console: kamal strapi-console -d staging"
+echo "- Deploy Next.js: kamal deploy -c config/deploy.staging.yml"
+echo "- Deploy Strapi: kamal deploy -c config/deploy.strapi.staging.yml"
+echo "- Check Next.js logs: kamal logs -f -c config/deploy.staging.yml"
+echo "- Check Strapi logs: kamal logs -f -c config/deploy.strapi.staging.yml"
+echo "- Strapi console: kamal strapi-console -c config/deploy.strapi.staging.yml"

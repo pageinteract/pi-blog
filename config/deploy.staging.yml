@@ -1,4 +1,6 @@
-service: pi-blog-staging
+service: pi-blog-nextjs-staging
+
+image: ghcr.io/pageinteract/pi-blog-nextjs-staging
 
 registry:
   server: ghcr.io
@@ -13,65 +15,27 @@ servers:
 proxy:
   ssl: true
   host: stg-ruby.pageinteract.com
+  path_prefix: "/blog"
+
+env:
+  clear:
+    NODE_ENV: production
+    PORT: 3000
+    HOSTNAME: "0.0.0.0"
+    NEXT_TELEMETRY_DISABLED: 1
+  secret:
+    - NEXT_PUBLIC_API_URL
+    - PREVIEW_SECRET
+    - IMAGE_HOSTNAME
 
 builder:
+  dockerfile: next/Dockerfile
+  context: next
   arch: amd64
 
-# Next.js service configuration
-services:
-  nextjs:
-    image: ghcr.io/pageinteract/pi-blog-nextjs-staging
-    dockerfile: next/Dockerfile
-    context: next
-    port: 3000
-    proxy:
-      ssl: true
-      host: stg-ruby.pageinteract.com
-      path: /blog
-    env:
-      clear:
-        NODE_ENV: production
-        PORT: 3000
-        HOSTNAME: "0.0.0.0"
-        NEXT_TELEMETRY_DISABLED: 1
-      secret:
-        - NEXT_PUBLIC_API_URL
-        - PREVIEW_SECRET
-        - IMAGE_HOSTNAME
-    volumes:
-      - /tmp/nextjs-cache:/app/.next/cache
-
-  strapi:
-    image: ghcr.io/pageinteract/pi-blog-strapi-staging
-    dockerfile: strapi/Dockerfile
-    context: strapi
-    port: 1337
-    proxy:
-      ssl: true
-      host: stg-strapi.pageinteract.com
-    env:
-      clear:
-        NODE_ENV: production
-        HOST: "0.0.0.0"
-        PORT: 1337
-        DATABASE_CLIENT: sqlite
-        DATABASE_FILENAME: /opt/app/data/data.db
-      secret:
-        - ADMIN_JWT_SECRET
-        - API_TOKEN_SALT
-        - TRANSFER_TOKEN_SALT
-        - APP_KEYS
-        - JWT_SECRET
-        - CLIENT_URL
-        - PREVIEW_SECRET
-        - RESEND_API_KEY
-    volumes:
-      - pi_blog_uploads:/opt/app/public/uploads
-      - pi_blog_data:/opt/app/data
+volumes:
+  - /tmp/nextjs-cache:/app/.next/cache
 
 aliases:
   console: app exec --interactive --reuse "bash"
   logs: app logs -f
-  strapi-console: strapi exec --interactive --reuse "yarn strapi console"
-  nextjs-logs: nextjs logs -f
-  strapi-logs: strapi logs -f

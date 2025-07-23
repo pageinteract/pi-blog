@@ -57,9 +57,13 @@ jobs:
       run: |
         ssh-keyscan -H 65.109.162.158 >> ~/.ssh/known_hosts
 
-    - name: Deploy to staging
+    - name: Deploy Next.js to staging
       run: |
-        kamal deploy -d staging
+        kamal deploy -c config/deploy.staging.yml
+
+    - name: Deploy Strapi to staging
+      run: |
+        kamal deploy -c config/deploy.strapi.staging.yml
 
     - name: Health check
       run: |

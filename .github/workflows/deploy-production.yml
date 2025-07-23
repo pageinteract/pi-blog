@@ -58,9 +58,13 @@ jobs:
       run: |
         ssh-keyscan -H ${{ secrets.PRODUCTION_SERVER_IP }} >> ~/.ssh/known_hosts
 
-    - name: Deploy to production
+    - name: Deploy Next.js to production
       run: |
-        kamal deploy -d production
+        kamal deploy -c config/deploy.yml
+
+    - name: Deploy Strapi to production
+      run: |
+        kamal deploy -c config/deploy.strapi.yml
 
     - name: Health check
       run: |

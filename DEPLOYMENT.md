@@ -29,8 +29,10 @@ pi-blog/
 │   ├── data/            # Database exports
 │   └── ...
 ├── config/
-│   ├── deploy.yml       # Production config
-│   └── deploy.staging.yml # Staging config
+│   ├── deploy.yml       # Next.js production config
+│   ├── deploy.staging.yml # Next.js staging config
+│   ├── deploy.strapi.yml  # Strapi production config
+│   └── deploy.strapi.staging.yml # Strapi staging config
 ├── scripts/
 │   ├── setup-deployment.sh
 │   └── migrate-strapi-data.sh
@@ -77,7 +79,11 @@ pi-blog/
 
 2. **Deploy to staging**:
    ```bash
-   kamal deploy -d staging
+   # Deploy Next.js
+   kamal deploy -c config/deploy.staging.yml
+
+   # Deploy Strapi
+   kamal deploy -c config/deploy.strapi.staging.yml
    ```
 
 ### Migrate Strapi Data
@@ -101,7 +107,11 @@ After the initial deployment, migrate your existing Strapi data:
 
 3. **Deploy**:
    ```bash
-   kamal deploy -d production
+   # Deploy Next.js
+   kamal deploy -c config/deploy.yml
+
+   # Deploy Strapi
+   kamal deploy -c config/deploy.strapi.yml
    ```
 
 ## Services Overview
@@ -130,56 +140,67 @@ After the initial deployment, migrate your existing Strapi data:
 
 ### Deployment
 ```bash
-# Deploy staging
-kamal deploy -d staging
+# Deploy Next.js to staging
+kamal deploy -c config/deploy.staging.yml
 
-# Deploy production
-kamal deploy -d production
+# Deploy Strapi to staging
+kamal deploy -c config/deploy.strapi.staging.yml
+
+# Deploy Next.js to production
+kamal deploy -c config/deploy.yml
+
+# Deploy Strapi to production
+kamal deploy -c config/deploy.strapi.yml
 
 # Check deployment status
-kamal status -d staging
+kamal details -c config/deploy.staging.yml
+kamal details -c config/deploy.strapi.staging.yml
 ```
 
 ### Logs and Monitoring
 ```bash
-# View all logs
-kamal logs -f -d staging
-
 # View Next.js logs
-kamal nextjs logs -f -d staging
+kamal logs -f -c config/deploy.staging.yml
 
 # View Strapi logs
-kamal strapi logs -f -d staging
+kamal logs -f -c config/deploy.strapi.staging.yml
 
 # View Strapi database status
-kamal strapi exec -d staging "ls -la /opt/app/data/"
+kamal app exec -c config/deploy.strapi.staging.yml "ls -la /opt/app/data/"
 ```
 
 ### Container Management
 ```bash
-# Access shell
-kamal console -d staging
+# Access Next.js shell
+kamal app exec -c config/deploy.staging.yml --interactive "bash"
+
+# Access Strapi shell
+kamal app exec -c config/deploy.strapi.staging.yml --interactive "bash"
 
 # Access Strapi console
-kamal strapi-console -d staging
+kamal strapi-console -c config/deploy.strapi.staging.yml
 
-# Restart services
-kamal restart -d staging
+# Restart Next.js service
+kamal app restart -c config/deploy.staging.yml
+
+# Restart Strapi service
+kamal app restart -c config/deploy.strapi.staging.yml
 
 # Stop services
-kamal stop -d staging
+kamal app stop -c config/deploy.staging.yml
+kamal app stop -c config/deploy.strapi.staging.yml
 ```
 
 ### Database Management
 ```bash
 # Access Strapi console for database operations
-kamal strapi exec -d staging --interactive "yarn strapi console"
+kamal app exec -c config/deploy.strapi.staging.yml --interactive "yarn strapi console"
 
 # Create database backup (copy SQLite file)
-kamal strapi exec -d staging "cp /opt/app/data/data.db /opt/app/data/backup-$(date +%Y%m%d-%H%M%S).db"
+kamal app exec -c config/deploy.strapi.staging.yml "cp /opt/app/data/data.db /opt/app/data/backup-$(date +%Y%m%d-%H%M%S).db"
 
 # List database backups
-kamal strapi exec -d staging "ls -la /opt/app/data/backup-*.db"
+kamal app exec -c config/deploy.strapi.staging.yml "ls -la /opt/app/data/backup-*.db"
 ```
 
 ## Troubleshooting
@@ -187,7 +208,7 @@ kamal strapi exec -d staging "ls -la /opt/app/data/backup-*.db"
 ### Common Issues
 
 1. **Build Failures**:
-   - Check Docker logs: `kamal logs -d staging`
+   - Check Docker logs: `kamal logs -c config/deploy.staging.yml` or `kamal logs -c config/deploy.strapi.staging.yml`
    - Verify environment variables are set correctly
    - Ensure all dependencies are properly installed
 
