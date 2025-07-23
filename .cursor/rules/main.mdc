@@ -25,3 +25,114 @@ alwaysApply: true
 ## Integration
 - Next.js must consume data exclusively via Strapi APIs (REST or GraphQL).
 - All API endpoints and fetch logic must handle server and client-side rendering securely.
+
+## Deployment
+- We will be deploying using [Kamal](https://kamal-deploy.org)
+- Kamal uses kamal-proxy for HTTP routing https://github.com/basecamp/kamal-proxy
+
+## Staging Deployment
+- I have a server at 65.109.162.158
+- This is blog site for pageinteract.com
+- For staging the landing page is at https://stg-ruby.pageinteract.com
+- Plan is in future the landing page and other its pages like terms, conditions, faqs will be in this next + strapi setup and remaining app like sign up, everything will be in rails in which the webapp is built.
+- For now I want the /blog of next app at https://stg-ruby.pageinteract.com/blog
+- The strapi admin can be at https://stg-strapi.pageinteract.com
+- But next app of staging especially blog is at https://stg-ruby.pageinteract.com/blog
+- Use kamal based container deployment of bith next and strapi
+- For first deployment export the existing sqlite db and import it in the new strapi of deployment.
+- Help me setup good sitemap.xml for the blog.
+- Help me setup good robots.txt for the blog.
+```yaml
+# Ruby staging deployment
+# config/deploy.staging.yml
+service: page_interact_staging
+
+image: ghcr.io/pageinteract/pi-ruby-staging
+
+registry:
+  server: ghcr.io
+  username: sulmanweb
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+servers:
+  web:
+    - 65.109.162.158
+  job:
+    hosts:
+      - 65.109.162.158
+    cmd: bin/jobs
+
+proxy:
+  ssl: true
+  host: stg-ruby.pageinteract.com
+env:
+  clear:
+    JOB_CONCURRENCY: 1
+    WEB_CONCURRENCY: 1
+    HOST: stg-ruby.pageinteract.com
+    RAILS_ENV: staging
+    RAILS_SERVE_STATIC_FILES: true
+    RAILS_LOG_TO_STDOUT: true
+    DB_HOST: page_interact_staging-postgres
+    RAILS_LOG_LEVEL: debug
+    RAILS_MAX_THREADS: 10
+    DB_POOL: 50
+  secret:
+    - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
+    - KAMAL_REGISTRY_PASSWORD
+    - HONEYBADGER_API_KEY
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+  maintenance: app exec --interactive --reuse "bin/rails 'maintenance:start[15]'"
+  maintenance_end: app exec --interactive --reuse "bin/rails 'maintenance:end'"
+
+volumes:
+  - page_interact_storage:/rails/storage:rw
+  - /tmp/storage:/rails/tmp/storage:rw
+  - page_interact_data:/data
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+  dockerfile: Dockerfile.staging
+
+accessories:
+  postgres:
+    image: postgres:17-alpine
+    host: 65.109.162.158
+    port: 5432
+    cmd: postgres -c max_connections=50
+    env:
+      clear:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: pi_stg
+        POSTGRES_INITDB_ARGS: ""
+      secret:
+        - POSTGRES_PASSWORD
+    files:
+      - config/init-stg.sql:/docker-entrypoint-initdb.d/init-stg.sql
+    volumes:
+      - /var/lib/postgresql/page_interact_staging:/var/lib/postgresql/data
+
+  postgres_backup:
+    image: kartoza/pg-backup:17-3.5
+    host: 65.109.162.158
+    env:
+      clear:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: pi_stg
+        POSTGRES_HOST: page_interact_staging-postgres
+        POSTGRES_PORT: 5432
+        CRON_SCHEDULE: "0 2 1 1 *" # once a year at 2am on January 1st
+      secret:
+        - POSTGRES_PASS
+    directories:
+      - backups:/backups
+```

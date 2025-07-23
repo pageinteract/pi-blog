@@ -1,0 +1,113 @@
+service: pi-blog-production
+
+registry:
+  server: ghcr.io
+  username: sulmanweb
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+servers:
+  web:
+    - YOUR_PRODUCTION_SERVER_IP
+
+proxy:
+  ssl: true
+  host: pageinteract.com
+
+builder:
+  arch: amd64
+
+# Next.js service configuration
+services:
+  nextjs:
+    image: ghcr.io/pageinteract/pi-blog-nextjs
+    dockerfile: next/Dockerfile
+    context: next
+    port: 3000
+    proxy:
+      ssl: true
+      host: pageinteract.com
+      path: /blog
+    env:
+      clear:
+        NODE_ENV: production
+        PORT: 3000
+        HOSTNAME: "0.0.0.0"
+        NEXT_TELEMETRY_DISABLED: 1
+      secret:
+        - NEXT_PUBLIC_API_URL
+        - PREVIEW_SECRET
+        - IMAGE_HOSTNAME
+    volumes:
+      - /tmp/nextjs-cache:/app/.next/cache
+
+  strapi:
+    image: ghcr.io/pageinteract/pi-blog-strapi
+    dockerfile: strapi/Dockerfile
+    context: strapi
+    port: 1337
+    proxy:
+      ssl: true
+      host: strapi.pageinteract.com
+    env:
+      clear:
+        NODE_ENV: production
+        HOST: "0.0.0.0"
+        PORT: 1337
+        DATABASE_CLIENT: postgres
+        DATABASE_HOST: pi-blog-production-postgres
+        DATABASE_PORT: 5432
+        DATABASE_NAME: pi_blog_prod
+        DATABASE_USERNAME: postgres
+        DATABASE_SCHEMA: public
+        DATABASE_SSL: false
+      secret:
+        - DATABASE_PASSWORD
+        - ADMIN_JWT_SECRET
+        - API_TOKEN_SALT
+        - TRANSFER_TOKEN_SALT
+        - APP_KEYS
+        - JWT_SECRET
+        - CLIENT_URL
+        - PREVIEW_SECRET
+        - RESEND_API_KEY
+    volumes:
+      - pi_blog_uploads:/opt/app/public/uploads
+
+accessories:
+  postgres:
+    image: postgres:17-alpine
+    host: YOUR_PRODUCTION_SERVER_IP
+    port: 5432
+    cmd: postgres -c max_connections=100
+    env:
+      clear:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: pi_blog_prod
+        POSTGRES_INITDB_ARGS: ""
+      secret:
+        - DATABASE_PASSWORD
+    volumes:
+      - /var/lib/postgresql/pi_blog_production:/var/lib/postgresql/data
+
+  postgres_backup:
+    image: kartoza/pg-backup:17-3.5
+    host: YOUR_PRODUCTION_SERVER_IP
+    env:
+      clear:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: pi_blog_prod
+        POSTGRES_HOST: pi-blog-production-postgres
+        POSTGRES_PORT: 5432
+        CRON_SCHEDULE: "0 2 * * *" # Daily backups at 2am
+      secret:
+        - DATABASE_PASSWORD
+    directories:
+      - backups:/backups
+
+aliases:
+  console: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  strapi-console: strapi exec --interactive --reuse "yarn strapi console"
+  nextjs-logs: nextjs logs -f
+  strapi-logs: strapi logs -f

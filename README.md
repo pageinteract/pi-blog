@@ -1,111 +1,213 @@
-# LaunchPad - Official Strapi Demo
+# 🌟 LaunchPad - Next.js + Strapi Full-Stack Blog Platform
 
-![LaunchPad](./LaunchPad.jpg)
+Welcome to LaunchPad, a cutting-edge full-stack blog platform built with **Next.js** (frontend) and **Strapi** (CMS/backend). This template provides everything you need to create a modern, performant, and SEO-optimized blog.
 
-Welcome aboard **LaunchPad**, the official Strapi demo application, where we launch your content into the stratosphere at the speed of _"we-can't-even-measure-it!"_.
-This repository contains the following:
+## ✨ Features
 
-- A Strapi project with content-types and data already onboard
-- A Next.js client that's primed and ready to fetch the content from Strapi faster than you can say "blast off!"
+- 🎨 **Modern UI**: Built with ShadCN UI components and Tailwind CSS
+- 🚀 **Performance**: Optimized for speed with Next.js 14 and standalone output
+- 📱 **Responsive**: Mobile-first design that works on all devices
+- 🔍 **SEO-Friendly**: Dynamic sitemaps, robots.txt, and meta tags
+- 🎯 **CMS Integration**: Full Strapi CMS with content management
+- 🖼️ **Media Handling**: Optimized image handling and uploads
+- 📝 **Rich Content**: Support for rich text, blocks, and dynamic zones
+- 🌐 **Deployment Ready**: Docker containers with Kamal deployment
+- 🔒 **Production Ready**: Security, monitoring, and backup features
 
-## 🌌 Get started
+## 🏗️ Architecture
 
-Strap yourself in! You can get started with this project on your local machine by following the instructions below, or you can [request a private instance on our website](https://strapi.io/demo)
+- **Frontend**: Next.js 14 with TypeScript, ShadCN UI, Tailwind CSS
+- **Backend**: Strapi 5.x CMS with PostgreSQL
+- **Deployment**: Docker containers orchestrated with Kamal
+- **Infrastructure**: Automated backups, SSL, and monitoring
 
-## 1. Clone Launchpad
+## 🚀 Getting Started
 
-To infinity and beyond! 🚀 Clone the repo with this command:
+### Local Development
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd pi-blog
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   # Install root dependencies
+   yarn install
+
+   # Install Next.js dependencies
+   cd next
+   yarn install
+
+   # Install Strapi dependencies
+   cd ../strapi
+   yarn install
+   ```
+
+3. **Set up environment variables**:
+
+   For Strapi:
+   ```bash
+   cp ./strapi/.env.example ./strapi/.env
+   ```
+
+   For Next.js:
+   ```bash
+   cp ./next/.env.example ./next/.env
+   ```
+
+4. **Start the development servers**:
+
+   Terminal 1 (Strapi):
+   ```bash
+   cd strapi
+   yarn develop
+   ```
+
+   Terminal 2 (Next.js):
+   ```bash
+   cd next
+   yarn dev
+   ```
+
+5. **Access the applications**:
+   - Next.js frontend: http://localhost:3000
+   - Strapi admin: http://localhost:1337/admin
+
+## 🚢 Deployment
+
+This project is configured for deployment using **Kamal** with Docker containers. See the [DEPLOYMENT.md](DEPLOYMENT.md) guide for detailed instructions.
+
+### Quick Deployment to Staging
+
+1. **Install Kamal**:
+   ```bash
+   gem install kamal
+   ```
+
+2. **Set up environment**:
+   ```bash
+   cp .env.example .env
+   # Fill in your values
+   ```
+
+3. **Deploy**:
+   ```bash
+   ./scripts/setup-deployment.sh
+   kamal deploy -d staging
+   ```
+
+### Staging URLs
+- **Blog**: https://stg-ruby.pageinteract.com/blog
+- **Strapi Admin**: https://stg-strapi.pageinteract.com/admin
+
+### Production Deployment
+For production deployment, see the comprehensive [DEPLOYMENT.md](DEPLOYMENT.md) guide.
+
+## 📁 Project Structure
 
 ```
-git clone https://github.com/strapi/launchpad.git
+pi-blog/
+├── next/                    # Next.js frontend application
+│   ├── app/                # App router pages and layouts
+│   ├── components/         # Reusable UI components
+│   ├── lib/               # Utilities and configurations
+│   └── Dockerfile         # Next.js container configuration
+├── strapi/                 # Strapi CMS backend
+│   ├── src/               # API routes and content types
+│   ├── config/            # Strapi configuration
+│   ├── data/              # Database exports and seeds
+│   └── Dockerfile         # Strapi container configuration
+├── config/                 # Kamal deployment configurations
+│   ├── deploy.yml         # Production deployment
+│   └── deploy.staging.yml # Staging deployment
+├── scripts/               # Deployment and utility scripts
+├── .github/workflows/     # CI/CD GitHub Actions
+└── DEPLOYMENT.md          # Comprehensive deployment guide
 ```
 
-- Navigate to your project folder by running `cd launchpad`.
+## 🎨 UI Components
 
-## 2. Set up environment variables
+This project uses [ShadCN UI](https://ui.shadcn.com/) for consistent, accessible, and customizable components:
 
-Before you take off, set up the required environment variables for both Strapi and Next.js.
+- Modern design system with Tailwind CSS
+- Fully accessible components
+- Dark/light mode support
+- Responsive design patterns
+- TypeScript support
 
-To create the Strapi .env file, copy the content of the `./strapi/.env.example` file into a new file named `./strapi/.env`, then modify the values to match your setup:
+## 📊 Content Management
 
-```sh
-cp ./strapi/.env.example ./strapi/.env
-```
+### Strapi Features
+- **Content Types**: Articles, Pages, Categories, Products
+- **Dynamic Zones**: Flexible content blocks
+- **Media Library**: Image and file management
+- **SEO Plugin**: Meta tags and Open Graph support
+- **User Permissions**: Role-based access control
+- **Preview Mode**: Draft content preview
 
-Then do the same for the Next.js .env file, and modify it too:
+### Content Types
+- **Articles**: Blog posts with rich content
+- **Pages**: Static pages with dynamic zones
+- **Categories**: Content organization
+- **Global**: Site-wide settings and navigation
 
-```sh
-cp ./next/.env.example ./next/.env
-```
+## 🔍 SEO Features
 
-## 3. Start Strapi
+- **Dynamic Sitemap**: Automatically generated from content
+- **Robots.txt**: Configured for optimal crawling
+- **Meta Tags**: Comprehensive SEO metadata
+- **Open Graph**: Social media optimization
+- **Structured Data**: Rich snippets support
+- **Performance**: Optimized Core Web Vitals
 
-Take a deep breath. It's time to power up the Strapi engines. Navigate to your ./my-projects/launchpad/strapi folder by running:
+## 🛠️ Development Tools
 
-Navigate to your `./my-projects/launchpad/strapi` folder by running `cd strapi` from your command line.
+- **TypeScript**: Full type safety
+- **ESLint**: Code linting and formatting
+- **Prettier**: Code formatting
+- **Husky**: Git hooks for quality checks
+- **Docker**: Containerized development and deployment
 
-- Run the following command in your `./launchpad/strapi` folder:
+## 🔒 Security Features
 
-```
-yarn && yarn seed && yarn develop
-```
+- **Environment Variables**: Secure configuration management
+- **HTTPS**: SSL/TLS encryption
+- **Database Security**: Connection encryption and access control
+- **Content Security**: Input validation and sanitization
+- **Authentication**: Secure admin access
 
-This will install dependencies, sprinkle in some data magic, and run the server. (You can run these commands separately, but why not be efficient?)
+## 📈 Monitoring and Maintenance
 
-## 4. Start Next.js
+- **Health Checks**: Automated service monitoring
+- **Automated Backups**: Database and media backups
+- **Log Management**: Centralized logging
+- **Performance Monitoring**: Application metrics
+- **Security Updates**: Automated dependency updates
 
-We're almost ready for lift-off! Next.js is your sleek, futuristic interface for getting all that glorious content out into the world. 🚀
+## 🤝 Contributing
 
-Open a new terminal tab or window to leave Strapi running, and navigate to your `./my-projects/launchpad/next` folder by running `cd next`.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-- Run the following command in your `./launchpad/next` folder
+## 📄 License
 
-```
-yarn && yarn build && yarn start
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This installs dependencies, builds your project, and starts your server. You’re now a spacefaring content master!
+## 🆘 Support
 
-## Features Overview ✨
+- **Documentation**: See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment help
+- **Issues**: Report bugs and request features via GitHub Issues
+- **Community**: Join discussions in GitHub Discussions
 
-### User
+## 🙏 Acknowledgments
 
-<br />
-
-**An intuitive, minimal editor** The editor allows you to pull in dynamic blocks of content. It’s 100% open-source, and it’s fully extensible.<br />
-**Media Library** Upload images, video or any files and crop and optimize their sizes, without quality loss.<br />
-**Flexible content management** Build any type of category, section, format or flow to adapt to your needs. <br />
-**Sort and Filter** Built-in sorting and filtering: you can manage thousands of entries without effort.<br />
-**User-friendly interface** The most user-friendly open-source interface on the market.<br />
-**SEO optimized** Easily manage your SEO metadata with a repeatable field and use our Media Library to add captions, notes, and custom filenames to optimize the SEO of media assets.<br /><br />
-
-### Global
-
-<br />
-
-[Customizable API](https://strapi.io/features/customizable-api): Automatically build out the schema, models, controllers for your API from the editor. Get REST or GraphQL API out of the box without writing a single line of code.<br />
-[Media Library](https://strapi.io/features/media-library): The media library allows you to store your images, videos and files in your Strapi admin panel with many ways to visualize and manage them.<br />
-[Role-Based Access Control (RBAC)](https://strapi.io/features/custom-roles-and-permissions): Role-Based Access Control is a feature available in the Administration Panel settings that let your team members have access rights only to the information they need.<br />
-[Internationalization (i18n)](https://strapi.io/features/internationalization): Internationalization (i18n) lets you create many content versions, also called locales, in different languages and for different countries.<br />
-[Audit Logs](https://strapi.io/blog/reasons-and-best-practices-for-using-audit-logs-in-your-application)The Audit Logs section provides a searchable and filterable display of all activities performed by users of the Strapi application<br />
-[Data transfer](https://strapi.io/blog/importing-exporting-and-transferring-data-with-the-strapi-cli) Streams your data from one Strapi instance to another Strapi instance.<br />
-[Review Worfklows](https://docs.strapi.io/user-docs/settings/review-workflows) Create and manage any desired review stages for your content, enabling your team to collaborate in the content creation flow from draft to publication. <br />
-
-## Resources
-
-[Docs](https://docs.strapi.io) • [Demo](https://strapi.io/demo) • [Forum](https://forum.strapi.io/) • [Discord](https://discord.strapi.io) • [Youtube](https://www.youtube.com/c/Strapi/featured) • [Strapi Design System](https://design-system.strapi.io/) • [Marketplace](https://market.strapi.io/) • [Cloud Free Trial](https://cloud.strapi.io)
-
-## Todo
-
-- [ ] Implement the official Strapi SEO plugin
-- [ ] Implement the community Strapi preview plugin
-- [ ] Create localized content for the pricing plans and products
-- [ ] Populate creator fields when it'll work on Strapi 5 (article authors information are missing)
-
-## Customization
-
-- The Strapi application contains a custom population middleware in order to populate more data than what it is set by default. You can find it in the `./strapi/src/middlewares/deepPopulate.ts` file.
-
-- The Strapi application contains a postinstall script that will regenerate an uuid for the project in order to get some anonymous usage information concerning this demo. You can disable it by removing the uuid inside the `./strapi/packages.json` file.
-
-- The Strapi application contains a patch for the @strapi/admin package. It is only necessary for the hosted demos since we automatically create the Super Admin users for them when they request this demo on our website.
+- [Next.js](https://nextjs.org/) - React framework
+- [Strapi](https://strapi.io/) - Headless CMS
+- [ShadCN UI](https://ui.shadcn.com/) - UI components
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
+- [Kamal](https://kamal-deploy.org/) - Deployment tool
