@@ -21,6 +21,9 @@ COPY --from=deps /opt/node_modules ./node_modules
 
 COPY . .
 
+# Rebuild native modules for the target architecture
+RUN npm rebuild better-sqlite3
+
 RUN yarn build
 
 FROM base AS runner
@@ -32,8 +35,9 @@ WORKDIR /opt/app
 
 COPY --from=builder --chown=strapi:strapi /opt/app ./
 
-# Create data directory for SQLite database
+# Create data directory for SQLite database and ensure public directory permissions
 RUN mkdir -p /opt/app/data && chown -R strapi:strapi /opt/app/data
+RUN mkdir -p /opt/app/public/uploads && chown -R strapi:strapi /opt/app/public
 
 USER strapi
 

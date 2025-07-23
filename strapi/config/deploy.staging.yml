@@ -17,6 +17,9 @@ primary_role: strapi
 proxy:
   ssl: true
   host: stg-strapi.pageinteract.com
+  app_port: 1337
+  healthcheck:
+    path: "/"
 
 env:
   clear:
